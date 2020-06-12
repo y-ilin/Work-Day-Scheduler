@@ -1,13 +1,6 @@
 $(document).ready(function () {
     // Defining object for hours in the schedule
     var hoursObj = {
-        1: "1AM",
-        2: "2AM",
-        3: "3AM",
-        4: "4AM",
-        5: "5AM",
-        6: "6AM",
-        7: "7AM",
         8: "8AM",
         9: "9AM",
         10: "10AM",
@@ -30,12 +23,17 @@ $(document).ready(function () {
     // Grabbing current time with moment.js
     var now = moment();
 
+    // Grabbing any calender event data in local storage
+    var eventsObj = {};
+    if( localStorage.getItem("eventsString") ){
+        eventsObj = JSON.parse(localStorage.getItem("eventsString"));
+    }
+
     // Display today's date in header
-    $("#currentDay").text(now.format("dddd, D MMMM"))
+    $("#currentDay").html(now.format("dddd, D MMMM"))
 
     // Creating timeblock divs for each hour in hoursObj
     $.each(hoursObj, function(key, value) {
-        // console.log(key, value);
         var newRow = $(`<div class="row" id="`+key+`">`);
         newRow.append($(`<div class="col col-2 col-md-1 hour">`+value+`</div>`));
         var newForm = $(`<div class="col col-8 col-md-10">`);
@@ -50,6 +48,12 @@ $(document).ready(function () {
             $(newForm).addClass("future");
         }
 
+        // Adding any existing event data for this timeblock from local storage
+        var thisHour = now.format("YYYY-MM-DD") + "-" + key;
+        if( eventsObj[thisHour]) {
+            $(newForm).find(".eventArea").html(eventsObj[thisHour]);
+        }
+
         newRow.append(newForm);
         newRow.append($(`<div class="col col-2 col-md-1 saveBtn"></div>`));
 
@@ -60,19 +64,35 @@ $(document).ready(function () {
     // When save buttons are clicked, the value of the forms are saved to local storage
     var handleSaveBtn = function(e) {
         if( $(e.target).hasClass("saveBtn")) {
-            newEvent = $(e.currentTarget).find(".eventArea").val();
+            var newEvent = $(e.currentTarget).find(".eventArea").val();
             // NOW SAVE TO LOCAL STORAGEEEE
-            console.log(newEvent);
+            var newEventDate = now.format("YYYY-MM-DD") + "-" + e.currentTarget.getAttribute("id");
+            eventsObj[newEventDate] = newEvent;
+            localStorage.setItem("eventsString", JSON.stringify(eventsObj));
         }
-
-        // console.log(e.target)
-        // console.log(e.currentTarget)
-        // console.log($(e.currentTarget).find(".eventArea").val())
     }
 
     $(".row").on("click", handleSaveBtn);
 
+    // Create button for clearing the day's schedule
+    $("body").append($("<div><button type='button' class='btn btn-secondary' id='clearBtn'>Clear this day's events</button></div>"))
+
+    // When clear button is clicked, erase local storage events for the day
+    $("#clearBtn").on("click", function(){
+        // Clear events from DOM
+        $(".eventArea").empty();
+
+        // Clear events from local storage
+        for( i=1; i<25; i++){
+            var thisHour = now.format("YYYY-MM-DD") + "-" + i;
+            if( eventsObj[thisHour] || eventsObj[thisHour]==="") {
+                delete eventsObj[thisHour];
+            }
+        }
+        localStorage.setItem("eventsString", JSON.stringify(eventsObj));
+    });
 });
+
 
 `
 GIVEN I am using a daily planner to create a schedule
@@ -89,14 +109,3 @@ THEN the text for that event is saved in local storage
 WHEN I refresh the page
 THEN the saved events persist
 `
-
-// Create timeblocks, 1 for each hour
-//// For each hour in hoursArray, make a row with class="row", column with class="hour"
-// Display timeblocks
-// Add form to timeblocks so that user is able to add text
-// If timeblock is in this current hour, class="present" styling for current
-// Else if timeblock is of past hours, class="past" styling for past
-// Else if timeblock is for future hours, class="future" styling for future
-
-// Add "Save" buttons to end of timeblocks
-// Add click event to "Save" buttons -> value of the forms are saved to local storage
