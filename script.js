@@ -55,7 +55,11 @@ $(document).ready(function () {
         }
 
         newRow.append(newForm);
-        newRow.append($(`<div class="col col-2 col-md-1 saveBtn"></div>`));
+
+        // Create Save buttons
+        var saveBtn = $(`<div class="col col-2 col-md-1 saveBtn"></div>`);
+        saveBtn.append($('<i class="far fa-save"></i>'));
+        newRow.append(saveBtn);
 
         // Display the timeblock
         $(".container").append($(newRow));
@@ -63,7 +67,7 @@ $(document).ready(function () {
 
     // When save buttons are clicked, the value of the forms are saved to local storage
     var handleSaveBtn = function(e) {
-        if( $(e.target).hasClass("saveBtn")) {
+        if( $(e.target).hasClass("saveBtn") ) {
             var newEvent = $(e.currentTarget).find(".eventArea").val();
             var newEventDate = now.format("YYYY-MM-DD") + "-" + e.currentTarget.getAttribute("id");
             eventsObj[newEventDate] = newEvent;
@@ -75,7 +79,7 @@ $(document).ready(function () {
     $(".row").on("click", handleSaveBtn);
 
     // Create button for clearing the day's schedule
-    $("body").append($("<div><button type='button' class='btn btn-secondary' id='clearBtn'>Clear this day's events</button></div>"))
+    $("body").append($("<div id='clearBtnDiv'><button type='button' class='btn btn-secondary' id='clearBtn'>Clear this day's events</button></div>"))
 
     // When clear button is clicked, erase local storage events for the day
     $("#clearBtn").on("click", function(){
