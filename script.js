@@ -67,7 +67,7 @@ $(document).ready(function () {
 
     // When save buttons are clicked, the value of the forms are saved to local storage
     var handleSaveBtn = function(e) {
-        if( $(e.target).hasClass("saveBtn") ) {
+        if( $(e.target).hasClass("saveBtn")) {
             var newEvent = $(e.currentTarget).find(".eventArea").val();
             var newEventDate = now.format("YYYY-MM-DD") + "-" + e.currentTarget.getAttribute("id");
             eventsObj[newEventDate] = newEvent;

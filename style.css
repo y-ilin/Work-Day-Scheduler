@@ -9,7 +9,7 @@ body {
   background-color: transparent;
   color: rgb(87, 87, 87);
   border-radius: 0;
-  border-bottom: 10px solid rgb(100, 100, 100);
+  border-bottom: 5px solid rgba(116, 116, 116, 0.788);
 }
 
 .row {
@@ -70,20 +70,22 @@ textarea {
 .saveBtn {
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
-  background-color: #06aed5;
-  color: white;
+  background-color: #7ecddf;
+  color: rgb(211, 211, 211);
+  font-size: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.saveBtn i:hover {
-  font-size: 20px;
-  transition: all 0.3s ease-in-out;
+.saveBtn:hover {
+  color: white;
+  font-size: 25px;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
 }
 
 .fa-save {
-  font-size: 20px;
   pointer-events: none;
 }
 
@@ -91,5 +93,5 @@ textarea {
 #clearBtnDiv {
   display: flex;
   justify-content: center;
-  margin-top: 30px;
+  margin: 30px 0px;
 }
